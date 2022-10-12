@@ -21,7 +21,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("point.test.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.todolist.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
@@ -30,7 +30,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("API Swagger")
-                .description("멤버 테스트 아이디 -> 1 을 사용하면 됩니다.")
+                .description("")
                 .version("0.01")
                 .build();
     }
