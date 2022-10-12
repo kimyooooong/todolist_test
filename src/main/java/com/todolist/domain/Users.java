@@ -1,12 +1,12 @@
 package com.todolist.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,13 +18,18 @@ public class Users extends CommonEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     @Column(unique=true)
+    @Setter
     private String id;
 
     @JsonIgnore
     private String password;
 
+    @Setter
     private String nickName;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "users" , fetch = FetchType.LAZY)
+    private List<TodoList> todoLists = new ArrayList<>();
 
     @Builder
     public Users(String id ,String password , String nickName){

@@ -23,16 +23,15 @@ public class UsersController {
     @PostMapping("/join")
     public ResponseEntity<RestResponse> join(
             @RequestBody JoinForm joinForm
-            ){
+            ) throws Exception {
 
-        usersService.join(joinForm.getId() , joinForm.getPassword() , joinForm.getNickname());
-        return ResponseEntity.ok(RestResponse.ok());
+        return ResponseEntity.ok(RestResponse.ok(usersService.join(joinForm.getId() , joinForm.getPassword() , joinForm.getNickname())));
     }
 
     @PostMapping("/login")
     public ResponseEntity<RestResponse> login(
             @RequestBody LoginForm loginForm
-    ){
+    ) throws Exception {
         return ResponseEntity.ok(RestResponse.ok( usersService.login(loginForm.getId() , loginForm.getPassword())));
     }
 
