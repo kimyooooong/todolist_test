@@ -1,4 +1,4 @@
-package com.todolist.config;
+package com.todolist.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,11 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -48,6 +44,12 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .cors().disable()
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //JWT 사용으로 세션 사용 X
+                .and()
+                .authorizeRequests()
+                .anyRequest().permitAll()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

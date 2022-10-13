@@ -34,7 +34,7 @@ public class RestExceptionHandler {
         log.error(errorMsg);
         return ResponseEntity.internalServerError()
                 .body(RestResponse.builder().success(false)
-                    .data(errorMsg)
+                    .data(e.getMessage())
                     .build());
 
     }

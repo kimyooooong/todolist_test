@@ -3,6 +3,8 @@ package com.todolist.repository;
 import com.todolist.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface UsersRepository extends JpaRepository<Users , Long> {
-    Users findById(String id);
+    Optional<Users> findById(String id);
 }

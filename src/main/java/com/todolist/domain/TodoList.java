@@ -3,10 +3,7 @@ package com.todolist.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.todolist.enums.TodoListKind;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -21,22 +18,28 @@ public class TodoList extends CommonEntity{
     private Long todoId;
 
     @Enumerated(EnumType.STRING)
+    @Setter
     private TodoListKind kind;
 
     private String title;
 
     private String desc;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="users_id")
+    @ManyToOne(targetEntity = Users.class, fetch = FetchType.LAZY)
+    @JoinColumn(name ="users_id", insertable = false, updatable = false)
     @JsonBackReference
     private Users users;
 
+    @Column(name = "users_id")
+    private Long usersId;
+
+
     @Builder
-    public TodoList(String title , String desc , Users users){
+    public TodoList(String title , String desc , Long userId , TodoListKind kind){
         this.title = title;
         this.desc = desc;
-        this.users = users;
+        this.usersId = userId;
+        this.kind = kind;
     }
 
 }

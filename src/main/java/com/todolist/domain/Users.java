@@ -27,6 +27,10 @@ public class Users extends CommonEntity{
     @Setter
     private String nickName;
 
+    @Setter
+    @Transient
+    private String jwtToken;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "users" , fetch = FetchType.LAZY)
     private List<TodoList> todoLists = new ArrayList<>();
