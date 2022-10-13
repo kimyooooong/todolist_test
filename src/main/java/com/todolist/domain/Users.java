@@ -32,7 +32,7 @@ public class Users extends CommonEntity{
     private String jwtToken;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "users" , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "users" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
     private List<TodoList> todoLists = new ArrayList<>();
 
     @Builder
