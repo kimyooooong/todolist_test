@@ -25,7 +25,7 @@ public class RestExceptionHandler {
         String msg = e.getMessage();
         map.put("msg", msg);
         return ResponseEntity.internalServerError().body(RestResponse.builder().success(false)
-                .data(errorMsg)
+                .data(msg)
                 .build());
     }
 
@@ -36,7 +36,7 @@ public class RestExceptionHandler {
         log.error(errorMsg);
         return ResponseEntity.internalServerError()
                 .body(RestResponse.builder().success(false)
-                    .data(errorMsg)
+                    .data(e.getMessage())
                     .build());
 
     }

@@ -40,7 +40,7 @@ public class UsersService {
         ValidationUtils.isIdPattern(id);
         ValidationUtils.isPasswordPattern(password);
 
-        Optional<Users> user = usersRepository.findById(id);
+        Optional<Users> user = usersRepository.findById(aes256.encrypt(id));
 
         if(user.isPresent()){
             throw new ServiceException("이미 등록 된 아이디 입니다.");
