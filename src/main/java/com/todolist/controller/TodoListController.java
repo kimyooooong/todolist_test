@@ -36,7 +36,7 @@ public class TodoListController {
 
     @ApiOperation("토큰 인증 필요 - TODO List 조회 ( 가장 최근 1 개 ) ")
     @GetMapping("/recent")
-    public ResponseEntity<RestResponse> getTodoListOne(@RequestHeader("Authentication") String Header) throws Exception {
+    public ResponseEntity<RestResponse> getTodoListOne(@RequestHeader("Authentication") String Header) {
 
         jwtTokenProvider.getAuthentication(Header).getPrincipal();
 
@@ -47,8 +47,8 @@ public class TodoListController {
     @GetMapping("/all")
     public ResponseEntity<RestResponse> getTodoListPage(
             @RequestHeader("Authentication") String Header,
-            @RequestParam(value = "page") Integer page,
-            @RequestParam(value = "size") Integer size) throws Exception {
+            @RequestParam(value = "page" , defaultValue = "1") Integer page,
+            @RequestParam(value = "size" , defaultValue = "20") Integer size) {
 
         jwtTokenProvider.getAuthentication(Header).getPrincipal();
 

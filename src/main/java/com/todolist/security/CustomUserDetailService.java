@@ -5,11 +5,14 @@ import com.todolist.domain.Users;
 import com.todolist.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -28,7 +31,8 @@ public class CustomUserDetailService implements UserDetailsService {
             throw new SecurityException(e);
         }
 
-        return new CustomUserDetail(users);
+        List<String> roles = List.of("ROLE_USER");
+        return new CustomUserDetail(users , roles);
     }
 }
 

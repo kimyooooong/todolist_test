@@ -24,7 +24,9 @@ public class RestExceptionHandler {
         CommonMap map = new CommonMap();
         String msg = e.getMessage();
         map.put("msg", msg);
-        return ResponseEntity.ok(RestResponse.builder().success(false).data(map).build());
+        return ResponseEntity.internalServerError().body(RestResponse.builder().success(false)
+                .data(errorMsg)
+                .build());
     }
 
     @ExceptionHandler(Exception.class)
@@ -34,7 +36,7 @@ public class RestExceptionHandler {
         log.error(errorMsg);
         return ResponseEntity.internalServerError()
                 .body(RestResponse.builder().success(false)
-                    .data(e.getMessage())
+                    .data(errorMsg)
                     .build());
 
     }

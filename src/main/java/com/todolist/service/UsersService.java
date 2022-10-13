@@ -29,15 +29,13 @@ public class UsersService {
 
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final EntityManager entityManager;
-
     /**
-     * 회원가입 - ( 동시성 제어 )
-     * @param id
-     * @param password
-     * @param nickName
+     * 회원가입 - ( 동시성 제어 ) ( 패스워드 단방향 SHA-256 , 그 외 정보 AES-256 양방향 암호화 )
+     * @param id - 아이디
+     * @param password - 패스워드
+     * @param nickName - 닉네임
      */
-    public void join(String id , String password , String nickName) throws Exception {
+    public synchronized Users join(String id , String password , String nickName) throws Exception {
 
         ValidationUtils.isIdPattern(id);
         ValidationUtils.isPasswordPattern(password);
@@ -47,7 +45,7 @@ public class UsersService {
         if(user.isPresent()){
             throw new ServiceException("이미 등록 된 아이디 입니다.");
         }
-        usersRepository.save(
+        return usersRepository.save(
             Users.builder()
                     .id(aes256.encrypt(id))
                     .password(passwordEncoder.encode(password))
@@ -56,9 +54,9 @@ public class UsersService {
     }
 
     /**
-     * 로그인
-     * @param id
-     * @param password
+     * 로그인 시 JWT 토큰 발급.
+     * @param id - 아이디
+     * @param password - 패스워드
      */
     public Users login(String id , String password) throws Exception {
 
@@ -70,6 +68,13 @@ public class UsersService {
 
         return getUsers(user.getUserId());
     }
+
+    /**
+     * 유저 정보 가져오기 ( 복호화 )
+     * @param usersId - LONG 아이디 기반. ( 고유 정보 )
+     * @return
+     * @throws Exception
+     */
     public Users getUsers(Long usersId) throws Exception {
         Users user = usersRepository.findById(usersId).orElseThrow(()->  new ServiceException("유저가 존재 하지 않습니다."));
         user.setId(aes256.decrypt(user.getId()));
@@ -77,23 +82,23 @@ public class UsersService {
         return user;
     }
 
-//    public Users getUsers(String id) throws Exception {
-//
-//        Users user = usersRepository.findById(aes256.encrypt(id)).orElseThrow(()->  new ServiceException("유저가 존재 하지 않습니다."));
-//        user.setId(aes256.decrypt(user.getId()));
-//        user.setNickName(aes256.decrypt(user.getNickName()));
-//        return user;
-//    }
-
+    /**
+     * 유저 정보 가져오기 ( 비 복호화 )
+     * @param id - String 아이디 기반.
+     * @return
+     * @throws Exception
+     */
     public Users getOriginalUser(String id) throws Exception {
         return usersRepository.findById(aes256.encrypt(id)).orElseThrow(()->  new ServiceException("유저가 존재 하지 않습니다."));
     }
 
+    /**
+     * 회원 탈퇴 (토큰인증 필요 ) ( 동시성 제어 )
+     * @param id - 탈퇴 할 아이디 ( 고유정보 )
+     * @throws Exception
+     */
     public synchronized void out(Long id) throws Exception {
-        Users user = getUsers(id);
-
-        usersRepository.delete(user);
-
+        usersRepository.delete(getUsers(id));
     }
 
 }
